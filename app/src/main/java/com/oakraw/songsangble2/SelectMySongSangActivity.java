@@ -1,0 +1,127 @@
+package com.oakraw.songsangble2;
+
+import android.content.Intent;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
+
+import com.melnykov.fab.FloatingActionButton;
+import com.oakraw.songsangble2.adapter.ListDeviceAdapter;
+import com.oakraw.songsangble2.fragment.MySongSangFragment;
+
+import java.util.ArrayList;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
+public class SelectMySongSangActivity extends AppCompatActivity {
+
+    private ListDeviceAdapter adapter;
+    private ArrayList<String> roomList;
+    private boolean isScan = false;
+    private FloatingActionButton scanBtn;
+    private SmoothProgressBar progrssBar;
+    private Toolbar mToolbar;
+    private GridLayoutManager gridManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_select_my_song_sang);
+
+        roomList = new ArrayList<>();
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler);
+        scanBtn = (FloatingActionButton) findViewById(R.id.fab);
+        progrssBar = (SmoothProgressBar) findViewById(R.id.progressBar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        findViewById(R.id.title_img).setVisibility(View.GONE);
+        TextView title = (TextView) findViewById(R.id.title_text);
+        title.setText("เลือกส่องแสง");
+        title.setVisibility(View.VISIBLE);
+
+        gridManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(gridManager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new ListDeviceAdapter(this, roomList);
+        recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new ListDeviceAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent();
+                intent.putExtra("TITLE",roomList.get(position));
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isScan){
+                    stopScanSongSang();
+                }else{
+                    startScanSongSang();
+                }
+
+                isScan = !isScan;
+            }
+        });
+
+        startScanSongSang();
+    }
+
+
+    Handler handler = new Handler();
+    Runnable simulateScanning = new Runnable() {
+        @Override
+        public void run() {
+            stopScanSongSang();
+            adapter.notifyDataSetChanged();
+        }
+    };
+
+    //TODO : scan for SongSang and update to list
+    private void startScanSongSang(){
+        scanBtn.setImageResource(R.mipmap.ic_close_black_24dp);
+        progrssBar.setVisibility(View.VISIBLE);
+        roomList.clear();
+
+        roomList.add("ห้อง 001");
+        roomList.add("ห้อง 002");
+        roomList.add("ห้อง 003");
+        roomList.add("ห้อง 004");
+        roomList.add("ห้อง 005");
+
+        //simulate scanning for device
+        handler.postDelayed(simulateScanning, 3000);
+
+    }
+
+    private void stopScanSongSang(){
+        scanBtn.setImageResource(R.mipmap.ic_search_black_24dp);
+        progrssBar.setVisibility(View.GONE);
+        handler.removeCallbacks(simulateScanning);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+}

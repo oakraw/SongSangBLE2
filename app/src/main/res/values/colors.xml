@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryDark">#303f9f</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primaryLight">#C5CAE9</color>
+    <color name="primaryTrans">#a3cecece</color>
+    <color name="primaryTransTouch">#8ee7e7e7</color>
+    <color name="secondary">#ffc107</color>
+    <color name="secondary_press">#ffaf8405</color>
+    <color name="secondary_ripple">#FFC107</color>
+    <color name="primaryText">#212121</color>
+    <color name="white">#fff</color>
+    <color name="light_ripple">#a4ffffff</color>
+    <color name="divider_color">#e4e4e4</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+
+</resources>
